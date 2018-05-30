@@ -1,4 +1,4 @@
-﻿using iTextSharp.text;
+using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.Win32;
 using System.IO;
@@ -45,17 +45,18 @@ namespace PdfTools
                 return;
             }
 
-            int suffix               = 1;
-            string outputFolderPath  = System.IO.Path.GetDirectoryName(CSourceFile.Text);
+            int suffix = 1;
+            string outputFolderPath = System.IO.Path.GetDirectoryName(CSourceFile.Text);
             string sourcePdfFilePath = CSourceFile.Text;
 
-            PdfReader reader   = new PdfReader(sourcePdfFilePath);
-            string pdfFileName = System.IO.Path.GetFileNameWithoutExtension(sourcePdfFilePath); 
+            PdfReader reader = new PdfReader(sourcePdfFilePath);
+            string pdfFileName = System.IO.Path.GetFileNameWithoutExtension(sourcePdfFilePath);
 
             for (int pageNumber = 1; pageNumber <= reader.NumberOfPages; pageNumber += numberOfPages)
             {
-                string outpuPdfFileName = string.Format(pdfFileName + "-{0}", suffix.ToString().PadLeft(3, '0'));
-                ExtractAndSaveFile(sourcePdfFilePath, outpuPdfFileName, outputFolderPath, pageNumber, numberOfPages);
+                string outputPdfFileName = string.Format(pdfFileName + "-{0}{1}", suffix.ToString().PadLeft(3, '0'), ".pdf");
+                ExtractAndSaveFile(sourcePdfFilePath, Path.Combine(outputFolderPath, outputPdfFileName), pageNumber, numberOfPages);
+
                 suffix++;
             }
             MessageBox.Show(Application.Current.MainWindow, "Done!", "Split Done", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -65,13 +66,17 @@ namespace PdfTools
         //
         //  
         //========================================
-        private void ExtractAndSaveFile(string sourcePdfFilePath, string outpuPdfFileName, string outputPath, int startPage, int numberOfPages)
+        private void ExtractAndSaveFile(string sourcePdfFilePath, string outpuPdfFileName, int startPage, int numberOfPages)
         {
             using (PdfReader reader = new PdfReader(sourcePdfFilePath))
             {
-                string outputFilename = System.IO.Path.Combine(outputPath, outpuPdfFileName + ".pdf");
-                Document document     = new Document();
-                PdfCopy partial       = new PdfCopy(document, new FileStream(outputFilename, FileMode.Create));
+                Document document = new Document();
+                PdfSmartCopy partial = new PdfSmartCopy(document, new FileStream(outpuPdfFileName, FileMode.Create));
+
+                partial.SetPdfVersion(PdfWriter.PDF_VERSION_1_5);
+                partial.CompressionLevel = PdfStream.BEST_COMPRESSION;
+                partial.SetFullCompression();
+
                 document.Open();
 
                 for (int pagenumber = startPage; pagenumber < (startPage + numberOfPages); pagenumber++)
@@ -85,6 +90,7 @@ namespace PdfTools
                         break;
                     }
                 }
+
                 document.Close();
             }
         }
