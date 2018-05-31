@@ -14,7 +14,6 @@ namespace PdfTools
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
         //========================================
@@ -70,7 +69,7 @@ namespace PdfTools
         {
             using (PdfReader reader = new PdfReader(sourcePdfFilePath))
             {
-                Document document = new Document();
+                Document document    = new Document();
                 PdfSmartCopy partial = new PdfSmartCopy(document, new FileStream(outpuPdfFileName, FileMode.Create));
 
                 partial.SetPdfVersion(PdfWriter.PDF_VERSION_1_5);
