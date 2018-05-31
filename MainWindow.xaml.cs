@@ -58,6 +58,7 @@ namespace PdfTools
 
                 suffix++;
             }
+
             MessageBox.Show(Application.Current.MainWindow, "Done!", "Split Done", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
