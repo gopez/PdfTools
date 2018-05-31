@@ -24,6 +24,7 @@ namespace PdfTools
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "PDF files (*.pdf)|*.pdf|All files (*.*)|*.*";
+
             if (openFileDialog.ShowDialog() == true)
             {
                 CSourceFile.Text = openFileDialog.FileName;
@@ -38,6 +39,7 @@ namespace PdfTools
         private void BSplitFile_Click(object sender, RoutedEventArgs e)
         {
             int numberOfPages;
+
             if (!int.TryParse(CInterval.Text, out numberOfPages) || numberOfPages <= 0)
             {
                 MessageBox.Show(Application.Current.MainWindow, "Enter number of pages per file", "Invalid page number", MessageBoxButton.OK, MessageBoxImage.Exclamation);
